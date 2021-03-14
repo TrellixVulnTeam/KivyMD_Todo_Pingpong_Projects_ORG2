@@ -36,7 +36,7 @@ $pip install -r requirements.txt
 
 ```
 
-Then simply apply the migrations
+Then simply run following command
 ```
 $python Todo_Application_Python_Kivy.py
 
