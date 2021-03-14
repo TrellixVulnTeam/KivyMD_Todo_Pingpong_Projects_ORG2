@@ -14,97 +14,75 @@ import time
 from kivy.core.audio import SoundLoader
 
 
-
-
-
 class layout(Widget):
-	def __init__(self,**kwargs):
+    def __init__(self, **kwargs):
 
-		super().__init__(*kwargs)
+        super().__init__(*kwargs)
 
+        with self.canvas:
 
-		with self.canvas:
+            Color(1, 1, 1, 1)
+            self.player_1 = Ellipse(pos=(400, 400), size=(50, 50))
+            self.x = +10
+            Color(1, 1, 1, 1)
+            self.kutuk = Rectangle(pos=(0, Window.height/2), size=(20, 125))
 
-			Color(1,1,1,1)
-			self.player_1=Ellipse(pos=(400, 400),size=(50,50))
-			self.x=+10
-			Color(1,1,1,1)
-			self.kutuk=Rectangle(pos=(0, Window.height/2),size=(20,125))
+            Color(1, 1, 1, 1)
 
+            self.pl = Rectangle(
+                pos=(Window.width-20, Window.height/2), size=(20, 125))
+            self.sabit = 5
+            self.sabitt = 10
+            print(self.sabit)
 
-			Color(1,1,1,1)
+        Clock.schedule_interval(self.motion, 1/60.)
 
-			self.pl=Rectangle(pos=(Window.width-20, Window.height/2),size=(20,125))
-			self.sabit=5
-			self.sabitt=10
-			print(self.sabit)
+        self.sound = SoundLoader.load('/home/alex/Downloads/mpp.wav')
+        self.sound.play()
+        self._keyboard = Window.request_keyboard(self._on_keyboard_down, self)
+        self._keyboard.bind(on_key_down=self.on_key_down)
 
-		Clock.schedule_interval(self.motion,1/60.)
+    def _on_keyboard_down(self):
+        self._keyboard.unbind(on_key_down=on_key_down)
+        self._keyboard = None
 
-		
-		self.sound=SoundLoader.load('/home/alex/Downloads/mpp.wav')
-		self.sound.play()
-		self._keyboard=Window.request_keyboard(self._on_keyboard_down,self)
-		self._keyboard.bind(on_key_down=self.on_key_down)
+    def on_key_down(self, keyboard, keycode, text, modifiers):
+        curx = self.pl.pos[0]
+        cury = self.pl.pos[1]
 
-	def _on_keyboard_down(self):
-		self._keyboard.unbind(on_key_down=on_key_down)
-		self._keyboard=None
+        if text == 'p':
+            newx = curx
+            newy = cury+35
+        if text == 'm':
+            newx = curx
+            newy = cury-35
 
-	def on_key_down(self, keyboard,keycode,text,modifiers):
-		curx=self.pl.pos[0]
-		cury=self.pl.pos[1]
+        self.pl.pos = (newx, newy)
 
-		if text=='p' :
-			newx=curx
-			newy=cury+35
-		if text=='m':
-			newx=curx
-			newy=cury-35
+    def motion(self, *args):
 
-		self.pl.pos=(newx,newy)
+        c1 = self.player_1.pos[0]
+        c2 = self.player_1.pos[1]
 
+        c1 = c1+self.sabit
+        c2 = c2+self.sabitt
 
+        # print(c1)
+        if(c2 > float(Window.height)):
+            self.sabitt = -self.sabitt
+        if(c2 < 0):
+            self.sabitt = -self.sabitt
 
-		
+        if (c1 > float(Window.width-20)) or c1 < 0:
+            self.sabit = -self.sabit
 
-
-
-
-		
-
-	def motion(self,*args):
-        
-
-		c1=self.player_1.pos[0]
-		c2=self.player_1.pos[1]
-
-		c1=c1+self.sabit
-		c2=c2+self.sabitt
-		
-
-		#print(c1)
-		if(c2>float(Window.height)):
-			self.sabitt = -self.sabitt
-		if(c2<0):
-			self.sabitt = -self.sabitt
-
-
-		if (c1 >float(Window.width-20)) or c1<0:
-			self.sabit = -self.sabit
-
-
-		self.player_1.pos=(c1,c2)
-
-
-
-
-
+        self.player_1.pos = (c1, c2)
 
 
 class MyApp(App):
-	def build(self):
-		return layout()
+    def build(self):
+        return layout()
+
 
 if __name__ == '__main__':
-	MyApp().run()
+    MyApp().run()
