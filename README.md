@@ -1,4 +1,4 @@
-# KivyMD_Todo_Pingpong_Projects
+# KivyMD_Todo_App
 
 
 Todo App is a Python project, which has been coded wity python 3.6 and kivy version of .
